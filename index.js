@@ -8,7 +8,6 @@ function SQLContext(options) {
 }
 
 function prefixKey(prefix, key) {
-console.log(arguments);
   return path.join(prefix, key);
 }
 
@@ -89,7 +88,6 @@ SQLContext.prototype.getBuffer = function(key, callback) {
 function SQLProvider(options) {
   this.options = options || {};
   this.keyPrefix = options.keyPrefix;
-  this.name = options.name;
 }
 
 SQLProvider.isSupported = function() {

@@ -1,6 +1,12 @@
 var expect = require('expect.js');
 var SQLProvider = require('..');
 
+// Use either sqlite or mysql, depending on env vars
+var type = process.env.DB_TYPE || 'sqlite';
+var name = process.env.DB_NAME || 'makedrive';
+var username = process.env.DB_USERNAME;
+var password = process.env.DB_PASSWORD;
+
 function guid() {
   if(!guid.id) {
     guid.id = 0;
@@ -13,7 +19,13 @@ describe("Filer.FileSystem.providers.SQLProvider", function() {
   var _context;
 
   beforeEach(function(done) {
-    _provider = new SQLProvider({type: 'sqlite', keyPrefix: guid()});
+    _provider = new SQLProvider({
+      type: type,
+      name: name,
+      username: username,
+      password: password,
+      keyPrefix: guid()
+    });
     _provider.open(function(error) {
       if(error) {
         throw error;
