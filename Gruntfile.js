@@ -10,7 +10,7 @@ module.exports = function(grunt) {
         node: true
       },
       gruntfile: {
-        src: 'gruntfile.js'
+        src: 'Gruntfile.js'
       },
       tests: {
         src: ['tests/**/*.js']

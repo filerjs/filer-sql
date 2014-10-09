@@ -22,6 +22,7 @@ describe("Filer.FileSystem.providers.SQLProvider", function() {
     _provider = new SQLProvider({
       type: type,
       name: name,
+      logging: console.log,
       username: username,
       password: password,
       keyPrefix: guid()
