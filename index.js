@@ -1,19 +1,12 @@
-var path = require('path');
 var DB = require('./lib/db.js');
 
 function SQLContext(options) {
   this.readOnly = options.isReadOnly;
-  this.keyPrefix = options.keyPrefix;
   this.db = options.db;
 }
 
-function prefixKey(prefix, key) {
-  return path.join(prefix, key);
-}
-
-function _put(db, keyPrefix, key, value, callback) {
-  var keyPath = prefixKey(keyPrefix, key);
-  db.createOrUpdate(keyPath, value, function(err) {
+function _put(db, key, value, callback) {
+  db.createOrUpdate(key, value, function(err) {
     if(err) {
       return callback(err);
     }
@@ -28,14 +21,14 @@ SQLContext.prototype.putObject = function(key, value, callback) {
 
   var json = JSON.stringify(value);
   var buf = new Buffer(json, 'utf8');
-  _put(this.db, this.keyPrefix, key, buf, callback);
+  _put(this.db, key, buf, callback);
 };
 SQLContext.prototype.putBuffer = function(key, value, callback) {
   if(this.readOnly) {
     return callback(new Error('write operation on read-only context.'));
   }
 
-  _put(this.db, this.keyPrefix, key, value, callback);
+  _put(this.db, key, value, callback);
 };
 
 SQLContext.prototype.delete = function (key, callback) {
@@ -43,8 +36,7 @@ SQLContext.prototype.delete = function (key, callback) {
     return callback(new Error('write operation on read-only context.'));
   }
 
-  var keyPath = prefixKey(this.keyPrefix, key);
-  this.db.remove(keyPath, function(err) {
+  this.db.remove(key, function(err) {
     if(err) {
       return callback(err);
     }
@@ -57,15 +49,14 @@ SQLContext.prototype.clear = function (callback) {
     return callback(new Error('write operation on read-only context.'));
   }
 
-  this.db.clearAll(this.keyPrefix, callback);
+  this.db.clearAll(callback);
 };
 
-function _get(db, keyPrefix, key, callback) {
-  var keyPath = prefixKey(keyPrefix, key);
-  db.find(keyPath, callback);
+function _get(db, key, callback) {
+  db.find(key, callback);
 }
 SQLContext.prototype.getObject = function(key, callback) {
-  _get(this.db, this.keyPrefix, key, function(err, data) {
+  _get(this.db, key, function(err, data) {
     if(err) {
       return callback(err);
     }
@@ -82,12 +73,12 @@ SQLContext.prototype.getObject = function(key, callback) {
   });
 };
 SQLContext.prototype.getBuffer = function(key, callback) {
-  _get(this.db, this.keyPrefix, key, callback);
+  _get(this.db, key, callback);
 };
 
 function SQLProvider(options) {
   this.options = options || {};
-  this.keyPrefix = options.keyPrefix;
+  this.user = options.user;
 }
 
 SQLProvider.isSupported = function() {
@@ -95,8 +86,8 @@ SQLProvider.isSupported = function() {
 };
 
 SQLProvider.prototype.open = function(callback) {
-  if(!this.keyPrefix) {
-    return callback(new Error('missing keyPrefix'));
+  if(!this.user) {
+    return callback(new Error('missing user'));
   }
 
   this.db = new DB(this.options, function(err) {
@@ -109,11 +100,11 @@ SQLProvider.prototype.open = function(callback) {
 };
 
 SQLProvider.prototype.getReadOnlyContext = function() {
-  return new SQLContext({isReadOnly: true, keyPrefix: this.keyPrefix, db: this.db});
+  return new SQLContext({isReadOnly: true, db: this.db});
 };
 
 SQLProvider.prototype.getReadWriteContext = function() {
-  return new SQLContext({isReadOnly: false, keyPrefix: this.keyPrefix, db: this.db});
+  return new SQLContext({isReadOnly: false, db: this.db});
 };
 
 module.exports = SQLProvider;

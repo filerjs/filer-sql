@@ -21,11 +21,13 @@ describe("Filer.FileSystem.providers.SQLProvider", function() {
   beforeEach(function(done) {
     _provider = new SQLProvider({
       type: type,
-      name: name,
       logging: console.log,
-      username: username,
-      password: password,
-      keyPrefix: guid()
+      user: guid(),
+      db: {
+        name: name,
+        username: username,
+        password: password
+      }
     });
     _provider.open(function(error) {
       if(error) {
