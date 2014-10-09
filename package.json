@@ -1,0 +1,38 @@
+{
+  "name": "filer-sql",
+  "version": "0.0.1",
+  "description": "Support for MySQL, MariaDB, SQLite or PostgreSQL Filer providers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/filerjs/filer-sql.git"
+  },
+  "keywords": [
+    "filer",
+    "sql"
+  ],
+  "author": "David Humphrey <david.humphrey@senecacollege.ca>",
+  "license": "MPL2.0",
+  "bugs": {
+    "url": "https://github.com/filerjs/filer-sql/issues"
+  },
+  "homepage": "https://github.com/filerjs/filer-sql",
+  "dependencies": {
+    "mysql": "^2.5.1",
+    "sequelize": "^2.0.0-rc1",
+    "sqlite3": "^3.0.2"
+  },
+  "optionalDependencies": {
+    "mariasql": "^0.1.21",
+    "pg": "^3.5.0"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "grunt": "^0.4.4",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-mocha-test": "^0.10.2"
+  }
+}
