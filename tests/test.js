@@ -2,7 +2,7 @@ var expect = require('expect.js');
 var SQLProvider = require('..');
 
 // Use either sqlite or mysql, depending on env vars
-var type = process.env.DB_TYPE || 'sqlite';
+var type = process.env.DB_TYPE || SQLProvider.SQLITE;
 var name = process.env.DB_NAME || 'makedrive';
 var username = process.env.DB_USERNAME;
 var password = process.env.DB_PASSWORD;
@@ -11,7 +11,7 @@ function guid() {
   if(!guid.id) {
     guid.id = 0;
   }
-  return 'id' + guid.id++;
+  return 'id:' + guid.id++;
 }
 
 describe("Filer.FileSystem.providers.SQLProvider", function() {
@@ -29,9 +29,10 @@ describe("Filer.FileSystem.providers.SQLProvider", function() {
         password: password
       }
     });
-    _provider.open(function(error) {
-      if(error) {
-        throw error;
+
+    _provider.open(function(err) {
+      if(err) {
+        throw err;
       }
 
       _context = _provider.getReadWriteContext();
@@ -41,10 +42,9 @@ describe("Filer.FileSystem.providers.SQLProvider", function() {
 
   afterEach(function(done){
     _context.clear(function(err) {
-      if (err) {
+      if(err) {
         throw err;
       }
-      expect(err).not.to.exist;
       done();
     });
   });
@@ -60,7 +60,28 @@ describe("Filer.FileSystem.providers.SQLProvider", function() {
     expect(sql.getReadWriteContext).to.be.a('function');
   });
 
-  it("should allow put() and get()", function(done) {
+  it("should allow putObject() and getObject()", function(done) {
+    var data = {
+      key: "value",
+      number: 35,
+      flag: true,
+      arr: [1,2,3]
+    };
+
+    _context.putObject("key", data, function(error) {
+      if(error) {
+        throw error;
+      }
+      _context.getObject("key", function(error, result) {
+        expect(error).not.to.exist;
+        expect(result).to.exist;
+        expect(result).to.eql(data);
+        done();
+      });
+    });
+  });
+
+  it("should allow putBuffer() and getBuffer()", function(done) {
     var data = new Buffer([5, 2, 5]);
     _context.putBuffer("key", data, function(error) {
       if(error) {

@@ -107,4 +107,10 @@ SQLProvider.prototype.getReadWriteContext = function() {
   return new SQLContext({isReadOnly: false, db: this.db});
 };
 
+// Forward db type constants
+SQLProvider.MYSQL = DB.MYSQL;
+SQLProvider.SQLITE = DB.SQLITE;
+SQLProvider.POSTGRES = DB.POSTGRES;
+SQLProvider.MARIADB = DB.MARIADB;
+
 module.exports = SQLProvider;
