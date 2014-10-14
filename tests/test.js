@@ -96,6 +96,30 @@ describe("Filer.FileSystem.providers.SQLProvider", function() {
     });
   });
 
+  it("should allow putBuffer() to update an existing record", function(done) {
+    var data1 = new Buffer([1, 2, 3]);
+    var data2 = new Buffer([4, 5, 6]);
+
+    _context.putBuffer("key", data1, function(error) {
+      if(error) {
+        throw error;
+      }
+
+      _context.putBuffer("key", data2, function(error) {
+        if(error) {
+          throw error;
+        }
+
+        _context.getBuffer("key", function(error, result) {
+          expect(error).not.to.exist;
+          expect(result).to.exist;
+          expect(result).to.eql(data2);
+          done();
+        });
+      });
+    });
+  });
+
   it("should allow delete()", function(done) {
     _context.putObject("key", "value", function(error) {
       if (error) {
