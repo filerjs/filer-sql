@@ -9,7 +9,20 @@ The `SQLProvider` can be used with Filer on node.js (i.e., this won't work in
 browser) like so:
 
 ```js
-var provider = new SQLProvider({
+// Option 1 - connecting with a connection URL
+var provider1 = new SQLProvider({
+  // The db type to use, see below for other options
+  type: SQLProvider.MYSQL,
+
+  // A MySQL connection string
+  url: 'mysql://user:pass@example.com:9821/dbname',
+
+  // A unique string to identify this user's filesystem (e.g., username)
+  user: 'something-unique'
+});
+
+// Option 2 - connecting with separate db options
+var provider2 = new SQLProvider({
   // The db type to use, see below for other options
   type: SQLProvider.MYSQL,
 
@@ -22,14 +35,14 @@ var provider = new SQLProvider({
   // Database options
   db: {
     // Name of Database to use, defaults to 'filer'
-    name: name,
+    name: "name",
     // DB authentication info, if necessary
-    username: username,
-    password: password
+    username: "username",
+    password: "password"
   }
 });
 
-var fs = new Filer.FileSystem({provider: provider});
+var fs = new Filer.FileSystem({provider: provider2});
 ```
 
 ### Database Types
