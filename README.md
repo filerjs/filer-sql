@@ -21,7 +21,7 @@ var provider = new SQLProvider({
 
   // Database options
   db: {
-    // Name of Database to use
+    // Name of Database to use, defaults to 'filer'
     name: name,
     // DB authentication info, if necessary
     username: username,
@@ -41,7 +41,20 @@ The `type` of database can be one of:
 * SQLProvider.POSTGRES
 * SQLProvider.MARIADB
 
+NOTE: some database types require you to pre-create your database. The default
+database name is `filer` unless you specify something else.
+
 ### Database Options
 
 If you want to pass extra options to `Sequelize`, add them to the options object.
 See the list of [valid options](http://sequelizejs.com/docs/1.7.8/usage#options).
+
+### Database Schema
+
+The database will have a single table, named `filer_data` with the following columns:
+
+|Name|Type                  |Details                                                           |
+-----|----------------------|------------------------------------------------------------------|
+|user|STRING(20) Primary Key|Unique username for this user's filesystem                        |
+|key |STRING(36) Primary Key|Filer Node ID's of the form '00000000-0000-0000-0000-000000000000'|
+|data|BLOB                  |binary data with JSON stored as Object->JSON->Buffer(utf8))       |
