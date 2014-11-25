@@ -27,7 +27,7 @@
   },
   "optionalDependencies": {
     "mariasql": "^0.1.21",
-    "pg": "^3.5.0"
+    "pg": "^4.0.0"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
