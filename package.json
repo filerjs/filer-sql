@@ -1,6 +1,6 @@
 {
   "name": "filer-sql",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Support for MySQL, MariaDB, SQLite or PostgreSQL Filer providers",
   "main": "index.js",
   "scripts": {
